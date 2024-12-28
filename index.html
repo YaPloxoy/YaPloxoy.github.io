@@ -13,102 +13,54 @@
             height: 100vh;
             overflow: hidden;
             display: flex;
-        }
-
-        .menu {
-            width: 20%;
-            background-color: #1b2631;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
+            align-items: center;
             color: white;
-            font-size: 18px;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
         }
 
-        .menu h1 {
-            margin: 0;
-            font-size: 48px;
-            font-weight: 700;
+        .container {
             text-align: center;
-            color: #34495e;
+        }
+
+        h1 {
+            font-size: 48px;
             margin-bottom: 30px;
+            color: #34495e;
             text-transform: uppercase;
         }
 
-        .menu-items {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .menu-items button {
+        .download-button {
             background-color: #34495e;
             color: white;
             border: none;
-            padding: 12px;
-            font-size: 16px;
+            padding: 15px 30px;
+            font-size: 18px;
             cursor: pointer;
             border-radius: 8px;
-            text-align: center;
-            width: 100%;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            font-weight: 700;
-            font-family: 'Roboto', sans-serif;
             text-transform: uppercase;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        .menu-items button:hover {
+        .download-button:hover {
             background-color: #003449;
             transform: scale(1.05);
         }
 
-        .menu-items button:active {
+        .download-button:active {
             background-color: #003b57;
             transform: scale(1);
-        }
-
-        .video-container {
-            width: 80%;
-            height: 100vh;
-            background-color: #1b2631;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="menu">
-        <h1>MENU</h1>
-        <div class="menu-items">
-            <!-- Первый канал -->
-            <button onclick="changeChannel('https://rutube.ru/embed/c58f502c7bb34a8fcdd976b221fca292/')">Первый канал</button>
-            <!-- Матч ТВ -->
-            <button onclick="changeChannel('https://rutube.ru/embed/11bbbec75a2ceb8cf446ad16813c6eec/')">Матч ТВ</button>
-        </div>
+    <div class="container">
+        <h1>DoD TV</h1>
+        <a href="DoDTV.HTML" download>
+            <button class="download-button">Скачать HTML [ DoD TV ]</button>
+        </a>
     </div>
-
-    <div class="video-container">
-        <iframe id="video-frame" src="https://rutube.ru/embed/c58f502c7bb34a8fcdd976b221fca292/" allowfullscreen></iframe>
-    </div>
-
-    <script>
-        function changeChannel(url) {
-            const videoFrame = document.getElementById('video-frame');
-            videoFrame.src = url;
-        }
-    </script>
 
 </body>
 </html>
