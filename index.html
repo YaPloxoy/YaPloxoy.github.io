@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dolphin TV</title>
+    <title>DoD TV</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -13,54 +13,224 @@
             height: 100vh;
             overflow: hidden;
             display: flex;
-            justify-content: center;
-            align-items: center;
+        }
+
+        /* Стили для полосы прокрутки */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #2c3e50;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #34495e;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #003449;
+        }
+
+        .menu {
+            width: 20%;
+            background-color: #1b2631;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
             color: white;
+            font-size: 18px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+            max-height: 100vh;
         }
 
-        .container {
+        .menu h1 {
+            margin: 0;
+            font-size: 60px;
+            font-weight: 700;
             text-align: center;
-        }
-
-        h1 {
-            font-size: 48px;
             margin-bottom: 30px;
-            color: #34495e;
             text-transform: uppercase;
+            background: linear-gradient(to bottom, #d52b1e 33%, #0000ff 33%, #0000ff 66%, #ffffff 66%);
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
         }
 
-        .download-button {
+        .menu .search-container {
+            margin-bottom: 20px;
+        }
+
+        .menu .search-container input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #34495e;
+            color: white;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+            outline: none;
+            transition: background-color 0.3s ease;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .menu .search-container input::placeholder {
+            color: #bfc9d1;
+            font-style: italic;
+        }
+
+        .menu .search-container input:focus {
+            background-color: #2c3e50;
+        }
+
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .menu-items button {
             background-color: #34495e;
             color: white;
             border: none;
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 12px;
+            font-size: 16px;
             cursor: pointer;
             border-radius: 8px;
-            text-transform: uppercase;
-            font-weight: 700;
+            text-align: center;
+            width: 100%;
             transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 700;
+            font-family: 'Roboto', sans-serif;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            box-sizing: border-box;
         }
 
-        .download-button:hover {
+        .menu-items button:hover {
             background-color: #003449;
             transform: scale(1.05);
         }
 
-        .download-button:active {
+        .menu-items button:active {
             background-color: #003b57;
             transform: scale(1);
+        }
+
+        .video-container {
+            width: 80%;
+            height: 100vh;
+            background-color: #1b2631;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="menu">
         <h1>DoD TV</h1>
-        <a href="DoDTV.HTML" download>
-            <button class="download-button">Скачать HTML [ DoD TV ]</button>
-        </a>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="ВВЕДИТЕ КАНАЛ" oninput="filterChannels()">
+        </div>
+        <div class="menu-items" id="menu-items">
+        </div>
     </div>
+
+    <div class="video-container">
+        <iframe id="video-frame" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        const channels = [
+            { name: 'Матч ТВ', url: 'https://rutube.ru/embed/11bbbec75a2ceb8cf446ad16813c6eec/' },
+            { name: 'НТВ', url: 'https://rutube.ru/embed/c37cd74192c6bc3d6cd6077c0c4fd686/' },
+            { name: 'Пятница', url: 'https://rutube.ru/embed/9f87a9a0cecbe773be6fddcbd93585ac/' },
+            { name: 'ТВ-3', url: 'https://rutube.ru/embed/7bf12d9c050f9a7ef3728db5730432ae/' },
+            { name: 'ТНТ', url: 'https://rutube.ru/embed/546602986e6a424d74d594876ddb3f04/' },
+            { name: 'ТНТ4', url: 'https://rutube.ru/embed/c801a7087e29a097192d74c270fbc6c1/' },
+            { name: 'Звезда', url: 'https://rutube.ru/embed/5ab908fccfac5bb43ef2b1e4182256b0/' },
+            { name: 'Первый канал', url: 'https://rutube.ru/embed/c58f502c7bb34a8fcdd976b221fca292/' },
+            { name: 'МУЗ-ТВ', url: 'https://rutube.ru/embed/df6fe73494a26f74da51573fd97b9baa/' },
+            { name: 'DISCOVERY CHANNEL', url: 'https://rutube.ru/embed/f61701b91f0f15e49611bc2c85494d4b/' },
+            { name: 'Кинолента 24', url: 'https://rutube.ru/embed/23c568b69e0eada33560850484223739/' },
+            { name: 'Ю-ТВ', url: 'https://rutube.ru/embed/5c9327074e25ca86f3111d4085cbbb65/' },
+            { name: 'СПАС', url: 'https://rutube.ru/embed/2bbfa9ebf9d79ade480d7281fcef1008/' },
+            { name: 'National Geographic', url: 'https://rutube.ru/embed/9f96e00ce0f4256c6ad608aaf580bf88/' },
+            { name: 'ОТР', url: 'https://rutube.ru/embed/faa934385b83f9e8a92f5484defae5fa/' },
+            { name: 'РБК', url: 'https://rutube.ru/embed/88f6485ee28d56daf13302ac6fe3d931/' },
+            { name: 'ТНТ MUSIC', url: 'https://rutube.ru/embed/f5ba23a0149f409c18168231844e0a3b/' },
+            { name: 'МИР', url: 'https://rutube.ru/embed/f5ba23a0149f409c18168231844e0a3b/' },
+            { name: '2х2', url: 'https://rutube.ru/embed/392b4686b770bae2da6bf5ac4574add5/' },
+
+        ];
+
+        channels.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+
+        const menuItemsContainer = document.getElementById('menu-items');
+        const videoFrame = document.getElementById('video-frame');
+
+        function addChannels() {
+            channels.forEach((channel, index) => {
+                const button = document.createElement('button');
+                button.textContent = channel.name;
+                button.onclick = () => changeChannel(channel.url);
+                button.style.transitionDelay = `${index * 0.1}s`;
+                menuItemsContainer.appendChild(button);
+
+                setTimeout(() => {
+                    button.style.opacity = '1';
+                    button.style.transform = 'translateY(0)';
+                }, 50);
+            });
+        }
+
+        function changeChannel(url) {
+            videoFrame.src = url;
+        }
+
+        function filterChannels() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const buttons = menuItemsContainer.querySelectorAll('button');
+
+            channels.forEach((channel, index) => {
+                const button = buttons[index];
+                if (channel.name.toLowerCase().includes(query)) {
+                    button.style.display = '';
+                } else {
+                    button.style.display = 'none';
+                }
+            });
+        }
+
+        function setRandomChannel() {
+            const randomChannel = channels[Math.floor(Math.random() * channels.length)];
+            changeChannel(randomChannel.url);
+        }
+
+        addChannels();
+        setRandomChannel();
+    </script>
 
 </body>
 </html>
